@@ -1,1 +1,3 @@
-# la_poo_avec_python
+# Apprenez la POO avec Python
+
+`python model.py`

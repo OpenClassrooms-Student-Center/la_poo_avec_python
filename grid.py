@@ -6,6 +6,9 @@ class Grid():
     y1 = -90
     y2 = 90
 
+    def __init__(self):
+        self.zones = self.create_zones()
+
     def create_zones(self):
         zones = []
         g_longitudes = list(range(self.x1, self.x2))
@@ -22,8 +25,3 @@ class Grid():
                         zone = Zone(longitudes[0], longitudes[1], latitudes[0], latitudes[1])
                         zones.append(zone)
         return zones
-
-# DEBUG #
-#grid = Grid()
-#zones = grid.create_zones()
-#print(zones[1].longitude, zones[-1].longitude)
