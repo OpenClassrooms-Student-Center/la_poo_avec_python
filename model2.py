@@ -5,7 +5,11 @@ import json
 import math
 import sys
 
+import matplotlib as mil
+mil.use('TkAgg')
+
 import matplotlib.pyplot as plt
+# static method
 
 
 class Agent:
@@ -159,7 +163,7 @@ class BaseGraph:
     def plot(self, x_values, y_values):
         """Override this method to create different kinds of graphs, such as histograms"""
         # http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
-        plt.plot(x_values, y_values)
+        plt.plot(x_values, y_values, '.')
 
     def xy_values(self, zones):
         """
@@ -207,11 +211,13 @@ class IncomeGraph(BaseGraph):
                 population_by_age[inhabitant.age] += 1
 
         x_values = range(0, 100)
+        # list comprehension (listcomps)
         y_values = [income_by_age[age] / (population_by_age[age] or 1) for age in range(0, 100)]
         return x_values, y_values
 
 
 def main():
+    # Si on avait mis tout ça en bas, on aurait eu beaucoup de variables globales.
     parser = argparse.ArgumentParser("Display population stats")
     parser.add_argument("src", help="Path to source json agents file")
     args = parser.parse_args()
@@ -226,16 +232,11 @@ def main():
         agent = Agent(position, **agent_properties)
         zone.add_inhabitant(agent)
 
-    try:
-        import matplotlib # pylint: disable=unused-variable
-    except ImportError:
-        sys.stderr("Matplotlib is not installed so you will not be able to plot zone stats")
-    else:
-        agreeableness_graph = AgreeablenessGraph()
-        agreeableness_graph.show(Zone.ZONES)
+    agreeableness_graph = AgreeablenessGraph()
+    agreeableness_graph.show(Zone.ZONES)
 
-        income_graph = IncomeGraph()
-        income_graph.show(Zone.ZONES)
+    income_graph = IncomeGraph()
+    income_graph.show(Zone.ZONES)
 
 if __name__ == "__main__":
     main()
