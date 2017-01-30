@@ -24,7 +24,7 @@ class Position:
         return self.latitude_degrees * math.pi / 180
 
 class Zone:
-
+ 
     ZONES = []
     MIN_LONGITUDE_DEGREES = -180
     MAX_LONGITUDE_DEGREES = 180
