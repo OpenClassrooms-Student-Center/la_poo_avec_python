@@ -1,15 +1,15 @@
 #! /usr/bin/env python
+# https://docs.python.org/3/library/argparse.html
 import argparse
-from collections import defaultdict
+from collections import defaultdict # for income graph
 import json
 import math
-import sys
 
 import matplotlib as mil
-mil.use('TkAgg')
-
+mil.use('TkAgg') # add it before launching matplotlib
 import matplotlib.pyplot as plt
 # static method
+
 
 
 class Agent:
@@ -26,6 +26,7 @@ class Position:
         # We store the degree values, but we will be mostly using radians
         # because they are much more convenient for computation purposes.
 
+        # assert : Lève une exception si renvoie False
         assert -180 <= longitude_degrees <= 180
         self.longitude_degrees = longitude_degrees
 
@@ -53,12 +54,17 @@ class Zone:
     ZONES = []
     # The width and height of the zones that will be added to ZONES. Here, we
     # choose square zones but we could just as well use rectangular shapes.
+
+    # Attributs de classe (constante si hors de la classe) car on fait 
+    # cls.WIDTH_DEGREES
     MIN_LONGITUDE_DEGREES = -180
     MAX_LONGITUDE_DEGREES = 180
     MIN_LATITUDE_DEGREES = -90
     MAX_LATITUDE_DEGREES = 90
     WIDTH_DEGREES = 1 # degrees of longitude
     HEIGHT_DEGREES = 1 # degrees of latitude
+
+    # S'il y a un attribut d'instance, il va dans __init__
 
     EARTH_RADIUS_KILOMETERS = 6371
 
@@ -120,8 +126,8 @@ class Zone:
         # Compute the index in the ZONES array that contains the given position
         longitude_index = int((position.longitude_degrees - cls.MIN_LONGITUDE_DEGREES)/ cls.WIDTH_DEGREES)
         latitude_index = int((position.latitude_degrees - cls.MIN_LATITUDE_DEGREES)/ cls.HEIGHT_DEGREES)
-        latitude_bins = int((cls.MAX_LATITUDE_DEGREES - cls.MIN_LATITUDE_DEGREES) / cls.HEIGHT_DEGREES)
-        zone_index = longitude_index * latitude_bins + latitude_index
+        longitude_bins = int((cls.MAX_LONGITUDE_DEGREES - cls.MIN_LONGITUDE_DEGREES) / cls.WIDTH_DEGREES) # 180-(-180) / 1
+        zone_index = latitude_index * longitude_bins + longitude_index
 
         # Just checking that the index is correct
         zone = cls.ZONES[zone_index]
@@ -131,16 +137,17 @@ class Zone:
 
     @classmethod
     def _initialize_zones(cls):
-        # Note that this method is "private": we prefix the method name zith "_".
+        # Note that this method is "private": we prefix the method name with "_".
         cls.ZONES = []
-        for longitude in range(cls.MIN_LONGITUDE_DEGREES, cls.MAX_LONGITUDE_DEGREES, cls.WIDTH_DEGREES):
-            for latitude in range(cls.MIN_LATITUDE_DEGREES, cls.MAX_LATITUDE_DEGREES, cls.HEIGHT_DEGREES):
+        for latitude in range(cls.MIN_LATITUDE_DEGREES, cls.MAX_LATITUDE_DEGREES, cls.HEIGHT_DEGREES):
+            for longitude in range(cls.MIN_LONGITUDE_DEGREES, cls.MAX_LONGITUDE_DEGREES, cls.WIDTH_DEGREES):
                 bottom_left_corner = Position(longitude, latitude)
                 top_right_corner = Position(longitude + cls.WIDTH_DEGREES, latitude + cls.HEIGHT_DEGREES)
                 zone = Zone(bottom_left_corner, top_right_corner)
                 cls.ZONES.append(zone)
 
-
+# () ne se fait pas trop.
+# Ceci est un mixin ?
 class BaseGraph:
 
     def __init__(self):
@@ -226,6 +233,7 @@ def main():
     for agent_properties in json.load(open(args.src)):
         longitude = agent_properties.pop('longitude')
         latitude = agent_properties.pop('latitude')
+        # store agent position in radians
         position = Position(longitude, latitude)
 
         zone = Zone.find_zone_that_contains(position)
