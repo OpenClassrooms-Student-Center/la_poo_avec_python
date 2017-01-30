@@ -29,7 +29,7 @@ class Zone:
     MIN_LONGITUDE_DEGREES = -180
     MAX_LONGITUDE_DEGREES = 180
     MIN_LATITUDE_DEGREES = -90
-    MAX_LATITUDE_DEGREES = 90
+    MAX_LATITUDE_DEGREES = 90 
     WIDTH_DEGREES = 1 # degrees of longitude
     HEIGHT_DEGREES = 1 # degrees of latitude
 
