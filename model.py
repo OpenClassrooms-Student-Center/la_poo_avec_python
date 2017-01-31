@@ -40,7 +40,6 @@ class Zone:
 
     @property
     def population(self):
-        """Number of inhabitants in the zone"""
         return len(self.inhabitants)
 
     def add_inhabitant(self, inhabitant):
@@ -54,10 +53,6 @@ class Zone:
 
     @classmethod
     def find_zone_that_contains(cls, position):
-        if not cls.ZONES:
-            # Initialize zones automatically if necessary
-            cls._initialize_zones()
-
         # Compute the index in the ZONES array that contains the given position
         longitude_index = int((position.longitude_degrees - cls.MIN_LONGITUDE_DEGREES)/ cls.WIDTH_DEGREES)
         latitude_index = int((position.latitude_degrees - cls.MIN_LATITUDE_DEGREES)/ cls.HEIGHT_DEGREES)
@@ -71,7 +66,7 @@ class Zone:
         return zone
 
     @classmethod
-    def _initialize_zones(cls):
+    def initialize_zones(cls):
         # Note that this method is "private": we prefix the method name with "_".
         cls.ZONES = []
         for latitude in range(cls.MIN_LATITUDE_DEGREES, cls.MAX_LATITUDE_DEGREES, cls.HEIGHT_DEGREES):
@@ -90,8 +85,9 @@ def main():
         longitude = agent_attributes.pop("longitude")
         position = Position(longitude, latitude)
         agent = Agent(position, **agent_attributes)
+        Zone.initialize_zones()
         zone = Zone.find_zone_that_contains(position)
         zone.add_inhabitant(agent)
-        # print(zone.population)
+        print(zone.population)
 
 main()
