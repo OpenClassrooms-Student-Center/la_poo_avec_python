@@ -120,4 +120,3 @@ def main():
         print(zone.average_agreeableness())
 
 main()
-0
