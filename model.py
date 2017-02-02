@@ -1,5 +1,8 @@
 import json
 import math
+import matplotlib as mil
+mil.use('TkAgg') # add it before launching matplotlib
+import matplotlib.pyplot as plt
 
 class Agent:
     
@@ -107,6 +110,45 @@ class Zone:
                 cls.ZONES.append(zone)
 
 
+class BaseGraph:
+
+    def __init__(self):
+        self.title = "Your graph title"
+        self.x_label = "X-axis label"
+        self.y_label = "X-axis label"
+        self.show_grid = True
+
+    def show(self, zones):
+        # x_values = gather only x_values from our zones
+        # y_values = gather only y_values from our zones
+        x_values, y_values = self.xy_values(zones)
+        plt.plot(x_values, y_values, '.')
+        plt.xlabel(self.x_label)
+        plt.ylabel(self.y_label)
+        plt.title(self.title)
+        plt.grid(self.show_grid)
+        plt.show()
+
+    def xy_values(self, zones):
+        raise NotImplementedError
+
+
+class AgreeablenessGraph(BaseGraph):
+
+    def __init__(self):
+        super().__init__()
+        self.title = "Nice people live in the countryside"
+        self.x_label = "population density"
+        self.y_label = "agreeableness"
+
+    def xy_values(self, zones):
+        x_values = [zone.population_density() for zone in zones]
+        y_values = [zone.average_agreeableness() for zone in zones]
+        return x_values, y_values
+
+
+
+
 
 
 def main():
@@ -117,6 +159,8 @@ def main():
         agent = Agent(position, **agent_attributes)
         zone = Zone.find_zone_that_contains(position)
         zone.add_inhabitant(agent)
-        print(zone.average_agreeableness())
+    
+    agreeableness_graph = AgreeablenessGraph()
+    agreeableness_graph.show(Zone.ZONES)
 
 main()
