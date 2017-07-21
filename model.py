@@ -2,7 +2,7 @@ import json
 import math
 
 class Agent:
-    
+
     def __init__(self, position, **agent_attributes):
         self.position = position
         for attr_name, attr_value in agent_attributes.items():
@@ -29,7 +29,7 @@ class Zone:
     MIN_LONGITUDE_DEGREES = -180
     MAX_LONGITUDE_DEGREES = 180
     MIN_LATITUDE_DEGREES = -90
-    MAX_LATITUDE_DEGREES = 90 
+    MAX_LATITUDE_DEGREES = 90
     WIDTH_DEGREES = 1 # degrees of longitude
     HEIGHT_DEGREES = 1 # degrees of latitude
 
@@ -80,12 +80,12 @@ class Zone:
 
 
 def main():
+    Zone.initialize_zones()
     for agent_attributes in json.load(open("agents-100k.json")):
         latitude = agent_attributes.pop("latitude")
         longitude = agent_attributes.pop("longitude")
         position = Position(longitude, latitude)
         agent = Agent(position, **agent_attributes)
-        Zone.initialize_zones()
         zone = Zone.find_zone_that_contains(position)
         zone.add_inhabitant(agent)
         print(zone.population)
